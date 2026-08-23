@@ -1,3 +1,5 @@
+[Discord](https://discord.gg/z4QUThweM4)
+
 To build: 'make clean', 'make', './build.sh'
 -
 Run in Qemu with: './run.sh'.
