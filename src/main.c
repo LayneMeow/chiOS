@@ -57,7 +57,7 @@ static void hcf(void) {
 
 __attribute__((noreturn))
 static void panic(void) {
-    printf("\nKettenkrad panic!\n");
+    printf("\Kettenkrad panic!\n");
     asm volatile ("ud2");
     __builtin_unreachable();
 }
@@ -487,9 +487,9 @@ void kmain(void) {
             unescape_newlines(argument);
             char entry[256];
             int len = snprintf(entry, sizeof entry, "%s\n", argument);
-            int64_t offset = chifs_size("journal.txt");
+            int64_t offset = chifs_size("JOURNAL");
 
-            chifs_write("journal.txt", (uint64_t)offset, entry, (size_t)len);
+            chifs_write("JOURNAL", (uint64_t)offset, entry, (size_t)len);
             printf("\nScribble Scribble Scribble... Journal entry written!\n");
         }
         else if (strcmp(user_cmd, "FILE") == 0) {
