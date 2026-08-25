@@ -32,6 +32,8 @@ static volatile uint64_t limine_requests_start_marker[] = LIMINE_REQUESTS_START_
 __attribute__((used, section(".limine_requests_end")))
 static volatile uint64_t limine_requests_end_marker[] = LIMINE_REQUESTS_END_MARKER;
 
+static int is_interp = 0;
+
 static size_t unescape_newlines(char *text) {
     char *read = text;
     char *write = text;
@@ -66,6 +68,68 @@ static void heading(const char *title) {
     console_set_color(CONSOLE_CYAN, CONSOLE_BLACK);
     printf("[%s]\n", title);
     console_set_color(CONSOLE_WHITE, CONSOLE_BLACK);
+}
+
+static void chito_ascii(void) {
+
+    console_set_color(CONSOLE_GREEN, CONSOLE_BLACK);
+
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+	printf("                                           @@@@@@@@%%%%%%@@@@@@@@@                                     \n");
+	printf("                                    @@%%#************************%%@@@                                \n");
+	printf("                                 @@#*********************************%%@@@                           \n");
+	printf("                              @@#****************************************%%@@                        \n");
+	printf("                            @%%**********************************************%%@                      \n");
+	printf("                          @@**************************************************%%@                    \n");
+	printf("                        @@#*****************************************************%%@                  \n");
+	printf("                       @%%*********************************************************@@                \n");
+	printf("                      @#***********************************************************%%@               \n");
+	printf("                    @@#*************************************************************%%@              \n");
+	printf("                  @@@####%%%%##********************************************************#@             \n");
+	printf("        @@@@@@@%%%%#********************************************************************#@            \n");
+	printf(" @@%%%%##********************************************************************************%%@           \n");
+	printf("@%%++**##%%%%%%%%%%%%##**##********************************************************************@           \n");
+	printf(" @@@%%+===========*%%####%%%%@%%%%%%%%##********************************************************@@          \n");
+	printf("      @@@%%%%#++==+%%#######@#######%%*=+*#%%##************************************##********%%@          \n");
+	printf("               @@######%%@###%%###%%.    -%%%%+   .-#%%@%%%%#****************************%%%%*****%%@          \n");
+	printf("               @######@@#%%+.##%%*      =%%%%.          =%%*.:-*@%%%%#*********************#%%#*%%@@         \n");
+	printf("              @%%####%%%%@%%- .-%%%%:       +@:           *%%.    ##%%:%%###%%%%@%%@#*****************%%@        \n");
+	printf("             @%%####%%=@@%%###%%%%#%%%%@#+.  +#           .@-     *%%-  *###%%-.%%####%%@%%************#@@      \n");
+	printf("            @%%####%%@%%###########%%=  :*%%:           .=.=*###%%@#*+:*%%#%%  ###%%######%%%%%%#********%%@     \n");
+	printf("           @@######:%%###########%%-    --            *@%%####%%%%##%%%%:+@#. =%%@######%%%%####@@%%#*****@@   \n");
+	printf("          @@#%%%%##%%-  :#%%%%######%%=   :*+            .%%###########%%*    *#@%%######@#####%%*===+#%%#*#@@ \n");
+	printf("          @%%@@%%##%%.       ..:--=+=-                 -%%%%#########%%*     :@######%%%%#####%%@%%%%**+==*%%##@\n");
+	printf("         @%%@ @###%%                                     :*%%%%######     .*%%######@%%#####%%@    @@@@%%%%@#\n");
+	printf("        @@@ @%%###%%                                          ....-=+*+:.%%######%%. #####@             \n");
+	printf("       @@@  @####%%.                                                   =%%######*  +%%##%%@             \n");
+	printf("       @@  @@####%%+                                                  .%%######%%.  +%%##@@             \n");
+	printf("      @@   @%%#####%%:                                                 *######%%+   ###%%@              \n");
+	printf("     @@    @######@%% .  .                                           -%%######%%. =%%##%%@               \n");
+	printf("           @#####%%@ %%. ..                    :==.                  .%%######%%%%#%%###%%@                \n");
+	printf("          @%%@%%###@   @#:.   .                                      *#######@####%%@@                 \n");
+	printf("          @@@%%##%%@     @@*...                                     =%%######%%%%##%%@@                   \n");
+	printf("          @@@%%##@         @@#-.......       .      ..            .%%#######@#%%@@                     \n");
+	printf("         @@@ @#%%@              @@#=::  :*%%#**%%.   ***#%%%%#+:   ..-#%%######@%%@                        \n");
+	printf("         @@  @#%%@               @%%*#%%#@#*****##=+%%%%*********##%%+#%%######@#*#@                       \n");
+	printf("             @%%@             @%%%%%%*+@##%%%%*******  +#**********%%@@@#####@@%%+++%%@                      \n");
+	printf("              @@            @*+++*%%%%##@*%%#****#*%%%%**********#%%#%%###%%@#%%@#%%%%%%@@                      \n");
+	printf("                           @#++++*@###@*+*@#***##*******#%%%%*++*%%%%@%%#%%#@*+++++%%@                     \n");
+	printf("                          @@+++++%%####%%+#%%*#%%*#%%%%#**#%%%%*+*#%%#*@@%%###%%#*++++++*@                     \n");
+	printf("                          @#++++#%%###%%#++++#%%#%%**#%%%%#%%%%#*++++*#%%####%%*+++++++*@                     \n");
+	printf("                          @*+++*%%####%%#+++++++#%%%%*++++++++++++%%#####%%+++****#%%@                     \n");
+	printf("                           @%%##%%#####%%#*****##%%%%%%****++++++++#%%#####%%%%%%##**%%@                       \n");
+	printf("                          @#++*%%#####%%++++++++++++++++++++++*%%#####%%*+++++++@@                      \n");
+	printf("                         @%%+++%%######%%++++++++++++++++++++++#%%#####%%++++++++*@                      \n");
+	printf("                         @+++*%%#######++++++++++++++++++++++%%######%%+++++++++%%@                     \n");
+	printf("                         %%%%  %%%%#%%%%  @@         %%%%%%         @%%####%%%%@                                \n");
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+	printf("                                                                                                    \n");
+
 }
 
 static void ksetup(void) {
@@ -245,11 +309,6 @@ static void offer_format(void) {
         return;
     }
 
-    static const char nuko[] =
-        "Nuko.\n"
-        "Nui~.\n";
-
-    chifs_write_file("nuko.txt", nuko, sizeof nuko - 1);
     chifs_create("JOURNAL");
 
     printf("  Formatted and mounted %s.\n", dev->name);
@@ -268,6 +327,27 @@ static void show_files(void) {
         printf("    %-32s %llu bytes, %u block%s\n", entries[i].name,
                (unsigned long long)entries[i].size, entries[i].blocks,
                entries[i].blocks == 1 ? "" : "s");
+    }
+}
+
+static void list_memory_map(void) {
+    heading("Memory map");
+
+    struct limine_memmap_response *memmap = memory_map();
+
+    if (memmap == NULL) {
+        printf("  no memory map available\n");
+        return;
+    }
+
+    for (uint64_t i = 0; i < memmap->entry_count; i++) {
+        struct limine_memmap_entry *entry = memmap->entries[i];
+
+        printf("  %#018llx-%#018llx %8llu KiB  %s\n",
+               (unsigned long long)entry->base,
+               (unsigned long long)(entry->base + entry->length),
+               (unsigned long long)(entry->length / 1024),
+               memmap_type_name(entry->type));
     }
 }
 
@@ -305,6 +385,228 @@ static void mount_filesystem(void) {
     offer_format();
 }
 
+static void execute_command(char *user_cmd) {
+    char *space = strchr(user_cmd, ' ');
+
+    if (space != NULL) {
+        int cmd_length = space - user_cmd;
+
+        strncpy(user_cmd, user_cmd, cmd_length);
+        user_cmd[cmd_length] = '\0';
+    } else {
+        strcpy(user_cmd, user_cmd);
+    }
+
+    if (strcmp(user_cmd, "HELP") == 0) {
+        printf("\n====================================\n");
+        printf("................HELP................\n");
+        printf("====================================\n");
+        printf("| %-33s|\n", "HELP      -> You are here.");
+        printf("| %-33s|\n", "TRUTH     -> Random quote.");
+        printf("| %-33s|\n", "ECHO      -> Display text.");
+        printf("| %-33s|\n", "LS        -> List files.");
+        printf("| %-33s|\n", "CHITO     -> Read file.");
+        printf("| %-33s|\n", "JOURNAL   -> Write in journal.");
+        printf("| %-33s|\n", "FILE      -> Create file.");
+        printf("| %-33s|\n", "NUKO      -> Delete file.");
+        printf("| %-33s|\n", "WRITE     -> Overwrite file.");
+        printf("| %-33s|\n", "APPEND    -> Append to file.");
+        printf("| %-33s|\n", "FORMAT    -> Format disk.");
+        printf("| %-33s|\n", "LSD       -> List disks.");
+        printf("| %-33s|\n", "LSSC      -> List controllers.");
+        printf("| %-33s|\n", "KANAZAWA  -> List memory map.");
+        printf("| %-33s|\n", "YUURI     -> Uh oh.");
+        printf("| %-33s|\n", "ISHII     -> Calculate.");
+        printf("| %-33s|\n", "ASCII     -> Ascii art.");
+        printf("| %-33s|\n", "RUN       -> Run command file.");
+        printf("!----------------------------------!\n");
+        printf("| %-33s|\n", "Usage:");
+        printf("| %-33s|\n", "HELP");
+        printf("| %-33s|\n", "TRUTH");
+        printf("| %-33s|\n", "ECHO <text>");
+        printf("| %-33s|\n", "LS");
+        printf("| %-33s|\n", "CHITO <file>");
+        printf("| %-33s|\n", "JOURNAL <text>");
+        printf("| %-33s|\n", "FILE <name>");
+        printf("| %-33s|\n", "NUKO <file>");
+        printf("| %-33s|\n", "WRITE <file> <text>");
+        printf("| %-33s|\n", "APPEND <file> <text>");
+        printf("| %-33s|\n", "FORMAT");
+        printf("| %-33s|\n", "LSD");
+        printf("| %-33s|\n", "LSSC");
+        printf("| %-33s|\n", "KANAZAWA");
+        printf("| %-33s|\n", "YUURI");
+        printf("| %-33s|\n", "ISHII <int> <operator> <int>");
+        printf("| %-33s|\n", "ASCII");
+        printf("| %-33s|\n", "RUN <file>");
+        printf("!__________________________________!\n");
+    }
+    else if (strcmp(user_cmd, "TRUTH") == 0) {
+        int min = 1;
+        int max = 10;
+        int range = max - min + 1;
+
+        int random_num = (rand() % range) + min;
+        if (random_num == 1) {printf("\nI never knew nighttime was this bright.\n");}
+        if (random_num == 2) {printf("\nIf they'd preserved food instead of making weapons, our lives would be so much easier.\n");}
+        if (random_num == 3) {printf("\nI never knew nighttime was this bright.\n");}
+        if (random_num == 4) {printf("\nSays it's chocolate flavored. No idea what chocolate is, though...\n");}
+        if (random_num == 5) {printf("\nIt's so blue, Chi. It's like we're in the sky.\n");}
+        if (random_num == 6) {printf("\nHey, I wonder what it feels like to live in the water.\n");}
+        if (random_num == 7) {printf("\nIs the afterlife like this? No warmth, so dark you can't see, with nobody there...\n");}
+        if (random_num == 8) {printf("\nIn the end, we're back to a cycle of resupplying and traveling. That means the road we travel is our house.\n");}
+        if (random_num == 9) {printf("\nMemories fade, so we write them down.\n");}
+        if (random_num == 10) {printf("\nMaybe this is what they call 'music'. I heard it's when high and low sounds have a rhythm and connect together.\n");}
+    }
+    else if (strcmp(user_cmd, "ECHO") == 0) {
+        char *argument = space + 1;
+        printf("\n%s\n", argument);
+    }
+    else if (strcmp(user_cmd, "LS") == 0) {
+    	show_files();
+    }
+    else if (strcmp(user_cmd, "CHITO") == 0) {
+        char *argument = space + 1;
+        int64_t size = chifs_size(argument);
+        char *buf = malloc((size_t)size + 1);
+        int64_t got = chifs_read_file(argument, buf, (size_t)size);
+        buf[got] = '\0';
+        printf("\n%s\n", buf);
+        free(buf);
+    }
+    else if (strcmp(user_cmd, "JOURNAL") == 0) {
+        char *argument = space + 1;
+        unescape_newlines(argument);
+        char entry[256];
+        int len = snprintf(entry, sizeof entry, "%s\n", argument);
+        int64_t offset = chifs_size("JOURNAL");
+
+        chifs_write("JOURNAL", (uint64_t)offset, entry, (size_t)len);
+        printf("\nScribble Scribble Scribble... Journal entry written!\n");
+    }
+    else if (strcmp(user_cmd, "FILE") == 0) {
+        char *argument = space + 1;
+
+        chifs_create(argument);
+    }
+    else if (strcmp(user_cmd, "NUKO") == 0) {
+        char *argument = space + 1;
+
+        chifs_remove(argument);
+    }
+    else if (strcmp(user_cmd, "WRITE") == 0) {
+        char *argument = space + 1;
+        char *text = strchr(argument, ' ');
+
+        *text = '\0';
+        text++;
+
+        size_t text_len = unescape_newlines(text);
+        chifs_write_file(argument, text, text_len);
+    }
+    else if (strcmp(user_cmd, "APPEND") == 0) {
+        char *argument = space + 1;
+        char *text = strchr(argument, ' ');
+
+        *text = '\0';
+        text++;
+
+        unescape_newlines(text);
+        char entry[256];
+        int len = snprintf(entry, sizeof entry, "%s\n", text);
+        int64_t offset = chifs_size(argument);
+
+        chifs_write(argument, (uint64_t)offset, entry, (size_t)len);
+    }
+    else if (strcmp(user_cmd, "FORMAT") == 0) {
+    	offer_format();
+    }
+    else if (strcmp(user_cmd, "LSD") == 0) {
+    	list_disks();
+    }
+    else if (strcmp(user_cmd, "LSSC") == 0) {
+    	list_storage_controllers();
+    }
+    else if (strcmp(user_cmd, "KANAZAWA") == 0) {
+    	list_memory_map();
+    }
+    else if (strcmp(user_cmd, "YUURI") == 0) {
+        panic();
+    }
+    else if (strcmp(user_cmd, "ISHII") == 0) {
+        char *argument = space + 1;
+        int a = atoi(argument);
+
+        char *space2 = strchr(argument, ' ');
+        char op = '+';
+        int b = 0;
+
+        if (space2 != NULL) {
+            op = *(space2 + 1);
+
+            char *space3 = strchr(space2 + 1, ' ');
+            if (space3 != NULL) {
+                b = atoi(space3 + 1);
+            }
+        }
+
+        int result;
+        switch (op) {
+            case '-': result = a - b; break;
+            case '*': result = a * b; break;
+            case '/': result = a / b; break;
+            default: result = a + b; break;
+        }
+
+        printf("\n%d\n", result);
+    }
+    else if (strcmp(user_cmd, "ASCII") == 0) {
+    	chito_ascii();
+    }
+    else if (strcmp(user_cmd, "RUN") == 0) {
+        char *argument = space + 1;
+        int64_t size = chifs_size(argument);
+
+        if (size < 0) {
+            printf("\nFile not found: %s\n", argument);
+        } else {
+            char *buf = malloc((size_t)size + 1);
+            int64_t got = chifs_read_file(argument, buf, (size_t)size);
+            buf[got] = '\0';
+
+            char *line_start = buf;
+            int prev_interp = is_interp;
+
+            is_interp = 1;
+
+            while (line_start != NULL) {
+                char *newline = strchr(line_start, '\n');
+
+                if (newline != NULL) {
+                    *newline = '\0';
+                }
+
+                if (*line_start != '\0') {
+                    char script_cmd[256];
+
+                    strncpy(script_cmd, line_start, sizeof script_cmd - 1);
+                    script_cmd[sizeof script_cmd - 1] = '\0';
+
+                    execute_command(script_cmd);
+                }
+
+                line_start = (newline != NULL) ? newline + 1 : NULL;
+            }
+            is_interp = prev_interp;
+
+            free(buf);
+        }
+    }
+    else {
+        printf("\nUnknown command: %s\n", user_cmd);
+    }
+}
+
 void split_with_strchr(char *str, char delim) {
     char *current = str;
     char *next;
@@ -330,71 +632,22 @@ void kmain(void) {
     mount_filesystem();
 
     console_set_color(CONSOLE_YELLOW, CONSOLE_BLACK);
-    printf("\nChiOS			~ Version 0.0.0 ~\n");
+    printf("\nChiOS			~ Version 0.0.1 ~\n");
 
     console_set_color(CONSOLE_GREEN, CONSOLE_BLACK);
 
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
-	printf("                                           @@@@@@@@%%%%%%@@@@@@@@@                                     \n");
-	printf("                                    @@%%#************************%%@@@                                \n");
-	printf("                                 @@#*********************************%%@@@                           \n");
-	printf("                              @@#****************************************%%@@                        \n");
-	printf("                            @%%**********************************************%%@                      \n");
-	printf("                          @@**************************************************%%@                    \n");
-	printf("                        @@#*****************************************************%%@                  \n");
-	printf("                       @%%*********************************************************@@                \n");
-	printf("                      @#***********************************************************%%@               \n");
-	printf("                    @@#*************************************************************%%@              \n");
-	printf("                  @@@####%%%%##********************************************************#@             \n");
-	printf("        @@@@@@@%%%%#********************************************************************#@            \n");
-	printf(" @@%%%%##********************************************************************************%%@           \n");
-	printf("@%%++**##%%%%%%%%%%%%##**##********************************************************************@           \n");
-	printf(" @@@%%+===========*%%####%%%%@%%%%%%%%##********************************************************@@          \n");
-	printf("      @@@%%%%#++==+%%#######@#######%%*=+*#%%##************************************##********%%@          \n");
-	printf("               @@######%%@###%%###%%.    -%%%%+   .-#%%@%%%%#****************************%%%%*****%%@          \n");
-	printf("               @######@@#%%+.##%%*      =%%%%.          =%%*.:-*@%%%%#*********************#%%#*%%@@         \n");
-	printf("              @%%####%%%%@%%- .-%%%%:       +@:           *%%.    ##%%:%%###%%%%@%%@#*****************%%@        \n");
-	printf("             @%%####%%=@@%%###%%%%#%%%%@#+.  +#           .@-     *%%-  *###%%-.%%####%%@%%************#@@      \n");
-	printf("            @%%####%%@%%###########%%=  :*%%:           .=.=*###%%@#*+:*%%#%%  ###%%######%%%%%%#********%%@     \n");
-	printf("           @@######:%%###########%%-    --            *@%%####%%%%##%%%%:+@#. =%%@######%%%%####@@%%#*****@@   \n");
-	printf("          @@#%%%%##%%-  :#%%%%######%%=   :*+            .%%###########%%*    *#@%%######@#####%%*===+#%%#*#@@ \n");
-	printf("          @%%@@%%##%%.       ..:--=+=-                 -%%%%#########%%*     :@######%%%%#####%%@%%%%**+==*%%##@\n");
-	printf("         @%%@ @###%%                                     :*%%%%######     .*%%######@%%#####%%@    @@@@%%%%@#\n");
-	printf("        @@@ @%%###%%                                          ....-=+*+:.%%######%%. #####@             \n");
-	printf("       @@@  @####%%.                                                   =%%######*  +%%##%%@             \n");
-	printf("       @@  @@####%%+                                                  .%%######%%.  +%%##@@             \n");
-	printf("      @@   @%%#####%%:                                                 *######%%+   ###%%@              \n");
-	printf("     @@    @######@%% .  .                                           -%%######%%. =%%##%%@               \n");
-	printf("           @#####%%@ %%. ..                    :==.                  .%%######%%%%#%%###%%@                \n");
-	printf("          @%%@%%###@   @#:.   .                                      *#######@####%%@@                 \n");
-	printf("          @@@%%##%%@     @@*...                                     =%%######%%%%##%%@@                   \n");
-	printf("          @@@%%##@         @@#-.......       .      ..            .%%#######@#%%@@                     \n");
-	printf("         @@@ @#%%@              @@#=::  :*%%#**%%.   ***#%%%%#+:   ..-#%%######@%%@                        \n");
-	printf("         @@  @#%%@               @%%*#%%#@#*****##=+%%%%*********##%%+#%%######@#*#@                       \n");
-	printf("             @%%@             @%%%%%%*+@##%%%%*******  +#**********%%@@@#####@@%%+++%%@                      \n");
-	printf("              @@            @*+++*%%%%##@*%%#****#*%%%%**********#%%#%%###%%@#%%@#%%%%%%@@                      \n");
-	printf("                           @#++++*@###@*+*@#***##*******#%%%%*++*%%%%@%%#%%#@*+++++%%@                     \n");
-	printf("                          @@+++++%%####%%+#%%*#%%*#%%%%#**#%%%%*+*#%%#*@@%%###%%#*++++++*@                     \n");
-	printf("                          @#++++#%%###%%#++++#%%#%%**#%%%%#%%%%#*++++*#%%####%%*+++++++*@                     \n");
-	printf("                          @*+++*%%####%%#+++++++#%%%%*++++++++++++%%#####%%+++****#%%@                     \n");
-	printf("                           @%%##%%#####%%#*****##%%%%%%****++++++++#%%#####%%%%%%##**%%@                       \n");
-	printf("                          @#++*%%#####%%++++++++++++++++++++++*%%#####%%*+++++++@@                      \n");
-	printf("                         @%%+++%%######%%++++++++++++++++++++++#%%#####%%++++++++*@                      \n");
-	printf("                         @+++*%%#######++++++++++++++++++++++%%######%%+++++++++%%@                     \n");
-	printf("                         %%%%  %%%%#%%%%  @@         %%%%%%         @%%####%%%%@                                \n");
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
-	printf("                                                                                                    \n");
+	chito_ascii();
 
 	char user_cmd[256];
 
 	cmd_in:
         console_set_color(CONSOLE_MAGENTA, CONSOLE_BLACK);
-        printf("\nChiOS> ");
+        if (is_interp == 0) {
+        	printf("\nChiOS> ");
+    	}
+    	else {
+    		printf("\n");
+		}
 
         if (scanf(" %255[^\n]", user_cmd) != 1) {
             goto cmd_in;
@@ -402,172 +655,7 @@ void kmain(void) {
 
         getchar();
 
-        char *space = strchr(user_cmd, ' ');
-
-        if (space != NULL) {
-            int cmd_length = space - user_cmd;
-
-            strncpy(user_cmd, user_cmd, cmd_length);
-            user_cmd[cmd_length] = '\0';
-        } else {
-            strcpy(user_cmd, user_cmd);
-        }
-
-        if (strcmp(user_cmd, "HELP") == 0) {
-            printf("\n====================================\n");
-            printf("................HELP................\n");
-            printf("====================================\n");
-            printf("| %-33s|\n", "HELP      -> You are here.");
-            printf("| %-33s|\n", "TRUTH     -> Random quote.");
-            printf("| %-33s|\n", "ECHO      -> Display text.");
-            printf("| %-33s|\n", "LS        -> List files.");
-            printf("| %-33s|\n", "CHITO     -> Read file.");
-            printf("| %-33s|\n", "JOURNAL   -> Write in journal.");
-            printf("| %-33s|\n", "FILE      -> Create file.");
-            printf("| %-33s|\n", "NUKO      -> Delete file.");
-            printf("| %-33s|\n", "WRITE     -> Overwrite file.");
-            printf("| %-33s|\n", "APPEND    -> Append to file.");
-            printf("| %-33s|\n", "FORMAT    -> Format disk.");
-            printf("| %-33s|\n", "LSD       -> List disks.");
-            printf("| %-33s|\n", "LSSC      -> List controllers.");
-            printf("| %-33s|\n", "YUURI     -> Uh oh.");
-            printf("!----------------------------------!\n");
-            printf("| %-33s|\n", "Usage:");
-            printf("| %-33s|\n", "HELP");
-            printf("| %-33s|\n", "TRUTH");
-            printf("| %-33s|\n", "ECHO <text>");
-            printf("| %-33s|\n", "LS");
-            printf("| %-33s|\n", "CHITO <file>");
-            printf("| %-33s|\n", "JOURNAL <text>");
-            printf("| %-33s|\n", "FILE <name>");
-            printf("| %-33s|\n", "NUKO <file>");
-            printf("| %-33s|\n", "WRITE <file> <text>");
-            printf("| %-33s|\n", "APPEND <file> <text>");
-            printf("| %-33s|\n", "FORMAT");
-            printf("| %-33s|\n", "LSD");
-            printf("| %-33s|\n", "LSSC");
-            printf("| %-33s|\n", "YUURI");
-            printf("!__________________________________!\n");
-        }
-        else if (strcmp(user_cmd, "TRUTH") == 0) {
-            int min = 1;
-            int max = 10;
-            int range = max - min + 1;
-
-            int random_num = (rand() % range) + min;
-            if (random_num == 1) {printf("\nI never knew nighttime was this bright.\n");}
-            if (random_num == 2) {printf("\nIf they'd preserved food instead of making weapons, our lives would be so much easier.\n");}
-            if (random_num == 3) {printf("\nI never knew nighttime was this bright.\n");}
-            if (random_num == 4) {printf("\nSays it's chocolate flavored. No idea what chocolate is, though...\n");}
-            if (random_num == 5) {printf("\nIt's so blue, Chi. It's like we're in the sky.\n");}
-            if (random_num == 6) {printf("\nHey, I wonder what it feels like to live in the water.\n");}
-            if (random_num == 7) {printf("\nIs the afterlife like this? No warmth, so dark you can't see, with nobody there...\n");}
-            if (random_num == 8) {printf("\nIn the end, we're back to a cycle of resupplying and traveling. That means the road we travel is our house.\n");}
-            if (random_num == 9) {printf("\nMemories fade, so we write them down.\n");}
-            if (random_num == 10) {printf("\nMaybe this is what they call 'music'. I heard it's when high and low sounds have a rhythm and connect together.\n");}
-        }
-        else if (strcmp(user_cmd, "ECHO") == 0) {
-            char *argument = space + 1;
-            printf("\n%s\n", argument);
-        }
-        else if (strcmp(user_cmd, "LS") == 0) {
-        	show_files();
-        }
-        else if (strcmp(user_cmd, "CHITO") == 0) {
-            char *argument = space + 1;
-            int64_t size = chifs_size(argument);
-            char *buf = malloc((size_t)size + 1);
-            int64_t got = chifs_read_file(argument, buf, (size_t)size);
-            buf[got] = '\0';
-            printf("\n%s\n", buf);
-            free(buf);
-        }
-        else if (strcmp(user_cmd, "JOURNAL") == 0) {
-            char *argument = space + 1;
-            unescape_newlines(argument);
-            char entry[256];
-            int len = snprintf(entry, sizeof entry, "%s\n", argument);
-            int64_t offset = chifs_size("JOURNAL");
-
-            chifs_write("JOURNAL", (uint64_t)offset, entry, (size_t)len);
-            printf("\nScribble Scribble Scribble... Journal entry written!\n");
-        }
-        else if (strcmp(user_cmd, "FILE") == 0) {
-            char *argument = space + 1;
-
-            chifs_create(argument);
-        }
-        else if (strcmp(user_cmd, "NUKO") == 0) {
-            char *argument = space + 1;
-
-            chifs_remove(argument);
-        }
-        else if (strcmp(user_cmd, "WRITE") == 0) {
-            char *argument = space + 1;
-            char *text = strchr(argument, ' ');
-
-            *text = '\0';
-            text++;
-
-            size_t text_len = unescape_newlines(text);
-            chifs_write_file(argument, text, text_len);
-        }
-        else if (strcmp(user_cmd, "APPEND") == 0) {
-            char *argument = space + 1;
-            char *text = strchr(argument, ' ');
-
-            *text = '\0';
-            text++;
-
-            unescape_newlines(text);
-            char entry[256];
-            int len = snprintf(entry, sizeof entry, "%s\n", text);
-            int64_t offset = chifs_size(argument);
-
-            chifs_write(argument, (uint64_t)offset, entry, (size_t)len);
-        }
-        else if (strcmp(user_cmd, "FORMAT") == 0) {
-        	offer_format();
-        }
-        else if (strcmp(user_cmd, "LSD") == 0) {
-        	list_disks();
-        }
-        else if (strcmp(user_cmd, "LSSC") == 0) {
-        	list_storage_controllers();
-        }
-        else if (strcmp(user_cmd, "YUURI") == 0) {
-            panic();
-        }
-        else if (strcmp(user_cmd, "ISHII") == 0) {
-            char *argument = space + 1;
-            int a = atoi(argument);
-
-            char *space2 = strchr(argument, ' ');
-            char op = '+';
-            int b = 0;
-
-            if (space2 != NULL) {
-                op = *(space2 + 1);
-
-                char *space3 = strchr(space2 + 1, ' ');
-                if (space3 != NULL) {
-                    b = atoi(space3 + 1);
-                }
-            }
-
-            int result;
-            switch (op) {
-                case '-': result = a - b; break;
-                case '*': result = a * b; break;
-                case '/': result = a / b; break;
-                default: result = a + b; break;
-            }
-
-            printf("\n%d\n", result);
-        }
-        else {
-            printf("\nUnknown command: %s\n", user_cmd);
-        }
+        execute_command(user_cmd);
 
     goto cmd_in;
 
